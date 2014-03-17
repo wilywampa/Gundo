@@ -283,7 +283,7 @@ function! s:GundoOpen()"{{{
             exe 'py3file ' . s:plugin_path . '/gundo.py'
             python3 initPythonModule()
         else
-            exe 'pyfile ' . s:plugin_path . '/gundo.py'
+            exe 'pyfile ' . fnameescape(s:plugin_path . '/gundo.py')
             python initPythonModule()
         endif
 
