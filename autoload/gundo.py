@@ -178,7 +178,7 @@ def ascii(buf, state, type, char, text, coldata):
     state[0] = coldiff
     state[1] = idx
 
-def generate(dag, edgefn, current):
+def generate(dag, edgefn, current, current_save):
     seen, state = [], [0, 0]
     buf = Buffer()
     for node, parents in list(dag):
@@ -189,6 +189,11 @@ def generate(dag, edgefn, current):
         line = '[%s] %s' % (node.n, age_label)
         if node.n == current:
             char = '@'
+        elif node.save:
+            if node.n == current_save:
+                char = 'S'
+            else:
+                char = 's'
         else:
             char = 'o'
         ascii(buf, state, 'C', char, [line], edgefn(seen, node, parents))
@@ -289,19 +294,22 @@ class Buffer(object):
         self.b += s
 
 class Node(object):
-    def __init__(self, n, parent, time, curhead):
+    def __init__(self, n, parent, time, curhead, save):
         self.n = int(n)
         self.parent = parent
         self.children = []
         self.curhead = curhead
         self.time = time
+        self.save = save
 
 def _make_nodes(alts, nodes, parent=None):
     p = parent
 
     for alt in alts:
         curhead = 'curhead' in alt
-        node = Node(n=alt['seq'], parent=p, time=alt['time'], curhead=curhead)
+        save = alt['save'] if 'save' in alt else 0
+        node = Node(n=alt['seq'], parent=p, time=alt['time'], curhead=curhead,
+            save=save)
         nodes.append(node)
         if alt.get('alt'):
             _make_nodes(alt['alt'], nodes, p)
@@ -311,7 +319,7 @@ def make_nodes():
     ut = vim.eval('undotree()')
     entries = ut['entries']
 
-    root = Node(0, None, False, 0)
+    root = Node(0, None, False, 0, 0)
     nodes = []
     _make_nodes(entries, nodes, root)
     nodes.append(root)
@@ -420,7 +428,16 @@ def GundoRenderGraph():
     dag = sorted(nodes, key=lambda n: int(n.n), reverse=True)
     current = changenr(nodes)
 
-    result = generate(walk_nodes(dag), asciiedges, current).rstrip().splitlines()
+    nodes_with_saves = [node for node in nodes if node.save]
+    max_saved_num = 0
+    current_save = 0
+    for node in nodes_with_saves:
+        if int(node.save) > max_saved_num:
+            max_saved_num = int(node.save)
+            current_save = int(node.n)
+
+    result = generate(walk_nodes(dag), asciiedges, current,
+        current_save).rstrip().splitlines()
     result = [' ' + l for l in result]
 
     target = (vim.eval('g:gundo_target_f'), int(vim.eval('g:gundo_target_n')))

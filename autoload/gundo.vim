@@ -167,11 +167,15 @@ function! s:GundoSyntaxGraph()"{{{
     syn match GundoHelp '\v^".*$'
     syn match GundoNumberField '\v\[[0-9]+\]'
     syn match GundoNumber '\v[0-9]+' contained containedin=GundoNumberField
+    syn match GundoSave '\v^[ |]*\zss'
+    syn match GundoLatestSave '\v^[ |]*\zsS'
 
     hi def link GundoCurrentLocation Keyword
     hi def link GundoHelp Comment
     hi def link GundoNumberField Comment
     hi def link GundoNumber Identifier
+    hi def link GundoSave PreProc
+    hi def link GundoLatestSave Keyword
 endfunction"}}}
 
 "}}}
