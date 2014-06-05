@@ -307,7 +307,9 @@ def _make_nodes(alts, nodes, parent=None):
 
     for alt in alts:
         curhead = 'curhead' in alt
-        save = alt['save'] if 'save' in alt else 0
+        save = 0
+        if 'save' in alt:
+            save = alt['save']
         node = Node(n=alt['seq'], parent=p, time=alt['time'], curhead=curhead,
             save=save)
         nodes.append(node)
