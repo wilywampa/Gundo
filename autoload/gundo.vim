@@ -112,13 +112,14 @@ function! s:GundoMapGraph()"{{{
     exec 'nnoremap <script> <silent> <buffer> ' . g:gundo_map_move_newer . " :call <sid>GundoMove(-1)<CR>"
     nnoremap <script> <silent> <buffer> <CR>          :call <sid>GundoRevert()<CR>
     nnoremap <script> <silent> <buffer> o             :call <sid>GundoRevert()<CR>
-    nnoremap <script> <silent> <buffer> <down>        :call <sid>GundoMove(1)<CR>
-    nnoremap <script> <silent> <buffer> <up>          :call <sid>GundoMove(-1)<CR>
-    nnoremap <script> <silent> <buffer> gg            gg:call <sid>GundoMove(1)<CR>
+    " nnoremap <script> <silent> <buffer> <down>        :call <sid>GundoMove(1)<CR>
+    " nnoremap <script> <silent> <buffer> <up>          :call <sid>GundoMove(-1)<CR>
+    nnoremap <script> <silent> <buffer> gg            gg:call <sid>GundoMove(1)<CR>:call <sid>GundoMove(-1)<CR>
     nnoremap <script> <silent> <buffer> P             :call <sid>GundoPlayTo()<CR>
     nnoremap <script> <silent> <buffer> p             :call <sid>GundoRenderChangePreview()<CR>
     nnoremap <script> <silent> <buffer> r             :call <sid>GundoRenderPreview()<CR>
     nnoremap <script> <silent> <buffer> q             :call <sid>GundoClose()<CR>
+    nnoremap <script> <silent> <buffer> Q             :call <sid>GundoClose()<CR>
     cabbrev  <script> <silent> <buffer> q             call <sid>GundoClose()
     cabbrev  <script> <silent> <buffer> quit          call <sid>GundoClose()
     nnoremap <script> <silent> <buffer> <2-LeftMouse> :call <sid>GundoMouseDoubleClick()<CR>
