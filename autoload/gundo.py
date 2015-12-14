@@ -188,7 +188,7 @@ def generate(dag, edgefn, current, current_save):
             age_label = 'Original'
         line = '[%s] %s' % (node.n, age_label)
         if node.n == current:
-            char = '@'
+            char = '$' if node.save else '@'
         elif node.save:
             if node.n == current_save:
                 char = 'S'
@@ -456,15 +456,9 @@ def GundoRenderGraph():
     vim.current.buffer[:] = (header + result)
     vim.command('setlocal nomodifiable')
 
-    i = 1
-    for line in result:
-        try:
-            line.split('[')[0].index('@')
-            i += 1
-            break
-        except ValueError:
-            pass
-        i += 1
+    i = next(iter(i for i, line in enumerate(result, 2) if
+                  '@' in line.split('[')[0] or
+                  '$' in line.split('[')[0]), len(result))
     vim.command('%d' % (i+len(header)-1))
 
 def GundoRenderPreview():

@@ -164,7 +164,7 @@ endfunction"}}}
 function! s:GundoSyntaxGraph()"{{{
     let b:current_syntax = 'gundo'
 
-    syn match GundoCurrentLocation '@'
+    syn match GundoCurrentLocation '[@$]'
     syn match GundoHelp '\v^".*$'
     syn match GundoNumberField '\v\[[0-9]+\]'
     syn match GundoNumber '\v[0-9]+' contained containedin=GundoNumberField
@@ -394,6 +394,8 @@ function! s:GundoMove(direction) range"{{{
     else
         call cursor(0, idx2 + 1)
     endif
+    call cursor(0, min(filter(map(
+        \ ['@', '$', 's', 'o'], '1 + stridx(line, v:val)'), 'v:val != 0')))
 
     if g:gundo_auto_preview == 1
         call s:GundoRenderPreview()
