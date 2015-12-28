@@ -398,7 +398,13 @@ function! s:GundoMove(direction) range"{{{
         \ ['@', '$', 's', 'o'], '1 + stridx(line, v:val)'), 'v:val != 0')))
 
     if g:gundo_auto_preview == 1
-        call s:GundoRenderPreview()
+        let eventignore_save = &eventignore
+        let &eventignore = 'BufWinEnter,BufEnter,WinEnter,BufLeave,WinLeave'
+        try
+            call s:GundoRenderPreview()
+        finally
+            let &eventignore = eventignore_save
+        endtry
     endif
 endfunction"}}}
 
