@@ -469,11 +469,11 @@ def GundoRenderPreview():
 
     # Check that there's an undo state. There may not be if we're talking about
     # a buffer with no changes yet.
-    if target_state == None:
+    if target_state:
+        target_state = int(target_state)
+    else:
         _goto_window_for_buffer_name('__Gundo__')
         return
-    else:
-        target_state = int(target_state)
 
     _goto_window_for_buffer(vim.eval('g:gundo_target_n'))
 
